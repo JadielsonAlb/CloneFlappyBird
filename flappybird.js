@@ -32,6 +32,9 @@ let bottomPipeImage;
 
 //variável para a gravidade
 let velocityX = -2; 
+let velocityY = 0; // velocidade vertical do pássaro
+let gravity = 0.5; //gravidade que afeta o pássaro
+let isGameOver = false; //variável para verificar se o jogo acabou
 //função para carregar o jogo
 window.onload = function() {
     board = document.getElementById("board");
@@ -56,13 +59,20 @@ bottomPipeImage.src = "assets/bottompipe.png";
 ///chamar a função update para atualizar o jogo
 requestAnimationFrame(update);
 setInterval(placePipes, 1500); //chamar a função placePipes a cada 1.5 segundos
+ document.addEventListener("keydown", moveBird);
+context.drawImage(birdImage, bird.x, bird.y, bird.width, bird.height);
+
 }
 ///função para atualizar o jogo
 function update() {
     requestAnimationFrame(update);
     context.clearRect(0, 0, board.width, board.height);
-   
-  context.drawImage(birdImage, bird.x, bird.y, bird.width, bird.height);
+  
+    //Passaro
+    velocityY += gravity; //aplicar gravidade ao pássaro
+    bird.y = Math.max(bird.y + velocityY, 0); //mover o pássaro para baixo, limitando a velocidade máxima
+    context.drawImage(birdImage, bird.x, bird.y, bird.width, bird.height);
+
 
    // canos
     for(let i = 0; i < pipeArray.length; i++) {
@@ -97,4 +107,9 @@ function placePipes() {
     pipeArray.push(bottonPipe);
 
     }
-
+function moveBird(e) {
+    if(e.code == "Space" || e.code == "ArrowUp"){
+        ///pulando
+        velocityY = -7; //mover o pássaro para cima
+    }
+}
